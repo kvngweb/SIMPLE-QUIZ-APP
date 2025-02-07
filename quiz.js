@@ -21,6 +21,7 @@ let score = 0;
 
 const questionEl = document.getElementById("question");
 const optionEl = document.getElementById("option");
+const nextButton = document.getElementById("next");
 const resultEl = document.getElementById("result");
 const progressEl = document.getElementById("progress");
 
@@ -28,15 +29,13 @@ function loadQuestion() {
     const { question, options } = quizData[currentQuestionIndex];
     questionEl.textContent = question;
     optionsEl.innerHTML = "";
-
-    options.forEach(option => {
+    currentQuestion.options.forEach(option => {
         const button = document.createElement("button");
         button.textContent = option;
         button.classList.add("option");
-        button.onclick = () => checkAnswer(option);
+        button.addEventListener("click", () => checkAnswer(option));
         optionsEl.appendChild(button);
     });
-
     progressEl.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
 }
 
@@ -45,13 +44,18 @@ function checkAnswer(selectedAnswer) {
         score++;
     }
     currentQuestionIndex++;
-    currentQuestionIndex < quizData.length ? loadQuestion() : showResult();
+    if (currentQuestionIndex < quizData.length) { 
+         loadQuestion();
+    } else {
+        showResult();
+    }
 }
 
 function showResult() {
-    questionEl.remove();
-    optionEl.remove();
-    progressEl.remove();
+    questionEl.style.display = "none";
+    optionEl.style.display = "none";
+    nextButton.style.display = "none";
+    progressEl.style.display = "none";
     resultEl.textContent = `You scored ${score} out of ${quizData.length}`;
 }
 
